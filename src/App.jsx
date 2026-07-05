@@ -42,7 +42,7 @@ const MENU = {
     label: "Tortas Consentidas", emoji: "🥪",
     items: [
       { id: "pierna",      emoji: "🥪", imagen: "https://i.ibb.co/Rp0gyTtC/IMG-5968.jpg", nombre: "Pierna",         desc: "Pierna adobada al horno c/ mayonesa en el pan", precios: { "Sencilla": 60, "c/Queso": 80 } },
-      { id: "mole-pollo",  emoji: "🥪", imagen: "", nombre: "Mole con Pollo", desc: "Mole rojo con pechuga de pollo c/ mayonesa en el pan", precios: { "Sencilla": 60, "c/Queso": 80 } },
+      { id: "mole-pollo",  emoji: "🥪", imagen: "https://i.ibb.co/F4T6CWSf/IMG-5970.jpg", nombre: "Mole con Pollo", desc: "Mole rojo con pechuga de pollo c/ mayonesa en el pan", precios: { "Sencilla": 60, "c/Queso": 80 } },
     ],
   },
   clasicas: {
@@ -57,11 +57,11 @@ const MENU = {
     label: "Tortas Fancy", emoji: "✨",
     items: [
       { id: "bacalao",         emoji: "✨", imagen: "https://i.ibb.co/ZpCT7NK0/IMG-5969.jpg", nombre: "Bacalao",                  desc: "Bacalao c/ mayonesa en el pan",                                           precios: { "Sencilla": 140, "c/Queso": 160 } },
-      { id: "arrachera",       emoji: "✨", imagen: "", nombre: "Arrachera",                desc: "Carne arrachera, mayonesa, jitomate, cebolla, aguacate",                  precios: { "Sencilla": 120, "c/Queso": 140 } },
+      { id: "arrachera",       emoji: "✨", imagen: "https://i.ibb.co/F4T6CWSf/IMG-5970.jpg", nombre: "Arrachera",                desc: "Carne arrachera, mayonesa, jitomate, cebolla, aguacate",                  precios: { "Sencilla": 120, "c/Queso": 140 } },
       { id: "rost-beef",       emoji: "✨", imagen: "https://i.ibb.co/d4SGS8d0/IMG-5967.jpg", nombre: "Rost Beef",                desc: "Rost beef, mayonesa, arugula, queso manchego, aioli de serrano",          precios: { "Sencilla": 120, "c/Queso": 140 } },
-      { id: "camarones",       emoji: "✨", imagen: "", nombre: "Camarones Rebozados",      desc: "Camarón, aguacate, arugula, aioli de serrano",                            precios: { "Sencilla": 140, "c/Queso": 160 } },
-      { id: "filete-pescado",  emoji: "✨", imagen: "", nombre: "Filete de Pescado al Horno", desc: "Filete, mayonesa, elote, epazote, mantequilla",                         precios: { "Único": 120 } },
-      { id: "jamon-serrano",   emoji: "✨", imagen: "", nombre: "Jamón Serrano",            desc: "Mayonesa, ajo confitado, tomate confitado, queso de cabra, toque de aceite de oliva, albahaca", precios: { "Único": 160 } },
+      { id: "camarones",       emoji: "✨", imagen: "https://i.ibb.co/F4T6CWSf/IMG-5970.jpg", nombre: "Camarones Rebozados",      desc: "Camarón, aguacate, arugula, aioli de serrano",                            precios: { "Sencilla": 140, "c/Queso": 160 } },
+      { id: "filete-pescado",  emoji: "✨", imagen: "https://i.ibb.co/F4T6CWSf/IMG-5970.jpg", nombre: "Filete de Pescado al Horno", desc: "Filete, mayonesa, elote, epazote, mantequilla",                         precios: { "Único": 120 } },
+      { id: "jamon-serrano",   emoji: "✨", imagen: "https://i.ibb.co/F4T6CWSf/IMG-5970.jpg", nombre: "Jamón Serrano",            desc: "Mayonesa, ajo confitado, tomate confitado, queso de cabra, toque de aceite de oliva, albahaca", precios: { "Único": 160 } },
     ],
   },
   comidas: {
@@ -79,13 +79,13 @@ const MENU = {
   complementos: {
     label: "Complementos", emoji: "🍟",
     items: [
-      { id: "papas-francesa", emoji: "🍟", imagen: "", nombre: "Papas a la Francesa",  desc: "Porción de papas fritas",              precios: { "Orden": 65 } },
-      { id: "dedos-queso",    emoji: "🧀", imagen: "", nombre: "4 Dedos de Queso",     desc: "Dedos de queso empanizados",           precios: { "Orden": 85 } },
-      { id: "palomitas-pollo",emoji: "🍗", imagen: "", nombre: "Palomitas de Pollo",   desc: "Trocitos de pollo empanizado",         precios: { "Orden": 120 } },
-      { id: "salsa-chipotle", emoji: "🌶️", imagen: "", nombre: "Salsa de Chipotle",    desc: "Extra picante",                        precios: { "Orden": 15 } },
-      { id: "chiles-vinagre", emoji: "🌶️", imagen: "", nombre: "Chiles en Vinagre",    desc: "Chiles jalapeños en vinagre",          precios: { "Orden": 15 } },
-      { id: "agua-fruta",     emoji: "🥤", imagen: "", nombre: "Agua de Fruta Natural", desc: "Agua fresca del día, 1 litro",         precios: { "1lt": 45 } },
-      { id: "coca-cola",      emoji: "🥤", imagen: "", nombre: "Coca-Cola",            desc: "Refresco 355ml",                       precios: { "355ml": 35 } },
+      { id: "papas-francesa", emoji: "🍟", imagen: "https://i.ibb.co/F4T6CWSf/IMG-5970.jpg", nombre: "Papas a la Francesa",  desc: "Porción de papas fritas",              precios: { "Orden": 65 } },
+      { id: "dedos-queso",    emoji: "🧀", imagen: "https://i.ibb.co/F4T6CWSf/IMG-5970.jpg", nombre: "4 Dedos de Queso",     desc: "Dedos de queso empanizados",           precios: { "Orden": 85 } },
+      { id: "palomitas-pollo",emoji: "🍗", imagen: "https://i.ibb.co/F4T6CWSf/IMG-5970.jpg", nombre: "Palomitas de Pollo",   desc: "Trocitos de pollo empanizado",         precios: { "Orden": 120 } },
+      { id: "salsa-chipotle", emoji: "🌶️", imagen: "https://i.ibb.co/F4T6CWSf/IMG-5970.jpg", nombre: "Salsa de Chipotle",    desc: "Extra picante",                        precios: { "Orden": 15 } },
+      { id: "chiles-vinagre", emoji: "🌶️", imagen: "https://i.ibb.co/F4T6CWSf/IMG-5970.jpg", nombre: "Chiles en Vinagre",    desc: "Chiles jalapeños en vinagre",          precios: { "Orden": 15 } },
+      { id: "agua-fruta",     emoji: "🥤", imagen: "https://i.ibb.co/F4T6CWSf/IMG-5970.jpg", nombre: "Agua de Fruta Natural", desc: "Agua fresca del día, 1 litro",         precios: { "1lt": 45 } },
+      { id: "coca-cola",      emoji: "🥤", imagen: "https://garis.mayoreoenlinea.mx/cdn/shop/files/7501055332175.png?v=1767499626", nombre: "Coca-Cola",            desc: "Refresco 355ml",                       precios: { "355ml": 35 } },
     ],
   },
 };
