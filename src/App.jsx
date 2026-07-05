@@ -41,7 +41,7 @@ const MENU = {
   consentidas: {
     label: "Tortas Consentidas", emoji: "🥪",
     items: [
-      { id: "pierna",      emoji: "🥪", imagen: "", nombre: "Pierna",         desc: "Pierna adobada al horno c/ mayonesa en el pan", precios: { "Sencilla": 60, "c/Queso": 80 } },
+      { id: "pierna",      emoji: "🥪", imagen: "https://images.unsplash.com/photo-1500048993953-d23a436266cf?w=900&q=80&auto=format&fit=crop", nombre: "Pierna",         desc: "Pierna adobada al horno c/ mayonesa en el pan", precios: { "Sencilla": 60, "c/Queso": 80 } },
       { id: "mole-pollo",  emoji: "🥪", imagen: "", nombre: "Mole con Pollo", desc: "Mole rojo con pechuga de pollo c/ mayonesa en el pan", precios: { "Sencilla": 60, "c/Queso": 80 } },
     ],
   },
