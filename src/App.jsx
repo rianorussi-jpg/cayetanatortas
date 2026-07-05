@@ -56,7 +56,7 @@ const MENU = {
   fancy: {
     label: "Tortas Fancy", emoji: "✨",
     items: [
-      { id: "bacalao",         emoji: "✨", imagen: "", nombre: "Bacalao",                  desc: "Bacalao c/ mayonesa en el pan",                                           precios: { "Sencilla": 140, "c/Queso": 160 } },
+      { id: "bacalao",         emoji: "✨", imagen: "https://i.ibb.co/ZpCT7NK0/IMG-5969.jpg", nombre: "Bacalao",                  desc: "Bacalao c/ mayonesa en el pan",                                           precios: { "Sencilla": 140, "c/Queso": 160 } },
       { id: "arrachera",       emoji: "✨", imagen: "", nombre: "Arrachera",                desc: "Carne arrachera, mayonesa, jitomate, cebolla, aguacate",                  precios: { "Sencilla": 120, "c/Queso": 140 } },
       { id: "rost-beef",       emoji: "✨", imagen: "", nombre: "Rost Beef",                desc: "Rost beef, mayonesa, arugula, queso manchego, aioli de serrano",          precios: { "Sencilla": 120, "c/Queso": 140 } },
       { id: "camarones",       emoji: "✨", imagen: "", nombre: "Camarones Rebozados",      desc: "Camarón, aguacate, arugula, aioli de serrano",                            precios: { "Sencilla": 140, "c/Queso": 160 } },
