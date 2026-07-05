@@ -27,61 +27,65 @@ const text    = "#1c1f1c";
 const muted   = "#707870";
 const pill    = "#eef1ec";
 
-// ── Zonas de entrega y envío plano por zona (sin Google Maps) ────────────────
+// ── Logo del negocio (pon aquí el link de tu logo; si lo dejas vacío se usa el emoji) ──
+const LOGO_URL = ""; // Ej: "https://tusitio.com/logo.png"
+
+// ── Zonas de entrega — envío gratis en las 3 colonias ────────────────────────
 const ZONAS = ["Zakia", "Zibatá", "El Refugio"];
-const ENVIO_POR_ZONA = { "Zakia": 30, "Zibatá": 35, "El Refugio": 40 };
-const ENVIO_FALLBACK = 35;
+const ENVIO_POR_ZONA = { "Zakia": 0, "Zibatá": 0, "El Refugio": 0 };
+const ENVIO_FALLBACK = 0;
+const envioTxt = (v) => (v === 0 ? "Gratis" : `$${v}`);
 
 // ── Menú (tortas) ──────────────────────────────────────────────────────────
 const MENU = {
   consentidas: {
     label: "Tortas Consentidas", emoji: "🥪",
     items: [
-      { id: "pierna",      emoji: "🥪", nombre: "Pierna",         desc: "Pierna adobada al horno c/ mayonesa en el pan", precios: { "Sencilla": 60, "c/Queso": 80 } },
-      { id: "mole-pollo",  emoji: "🥪", nombre: "Mole con Pollo", desc: "Mole rojo con pechuga de pollo c/ mayonesa en el pan", precios: { "Sencilla": 60, "c/Queso": 80 } },
+      { id: "pierna",      emoji: "🥪", imagen: "", nombre: "Pierna",         desc: "Pierna adobada al horno c/ mayonesa en el pan", precios: { "Sencilla": 60, "c/Queso": 80 } },
+      { id: "mole-pollo",  emoji: "🥪", imagen: "", nombre: "Mole con Pollo", desc: "Mole rojo con pechuga de pollo c/ mayonesa en el pan", precios: { "Sencilla": 60, "c/Queso": 80 } },
     ],
   },
   clasicas: {
     label: "Tortas Clásicas", emoji: "🥪",
     items: [
-      { id: "mila-cerdo", emoji: "🥪", nombre: "Milanesa de Cerdo",  desc: "Milanesa de cerdo, mayonesa, jitomate, cebolla, aguacate", precios: { "Sencilla": 70,  "c/Queso": 90  } },
-      { id: "mila-res",   emoji: "🥪", nombre: "Milanesa de Res",    desc: "Milanesa de res, mayonesa, jitomate, cebolla, aguacate",   precios: { "Sencilla": 120, "c/Queso": 140 } },
-      { id: "pechuga",    emoji: "🥪", nombre: "Pechuga Empanizada", desc: "Pechuga de pollo, mayonesa, jitomate, cebolla, aguacate",  precios: { "Sencilla": 70,  "c/Queso": 90  } },
+      { id: "mila-cerdo", emoji: "🥪", imagen: "", nombre: "Milanesa de Cerdo",  desc: "Milanesa de cerdo, mayonesa, jitomate, cebolla, aguacate", precios: { "Sencilla": 70,  "c/Queso": 90  } },
+      { id: "mila-res",   emoji: "🥪", imagen: "", nombre: "Milanesa de Res",    desc: "Milanesa de res, mayonesa, jitomate, cebolla, aguacate",   precios: { "Sencilla": 120, "c/Queso": 140 } },
+      { id: "pechuga",    emoji: "🥪", imagen: "", nombre: "Pechuga Empanizada", desc: "Pechuga de pollo, mayonesa, jitomate, cebolla, aguacate",  precios: { "Sencilla": 70,  "c/Queso": 90  } },
     ],
   },
   fancy: {
     label: "Tortas Fancy", emoji: "✨",
     items: [
-      { id: "bacalao",         emoji: "✨", nombre: "Bacalao",                  desc: "Bacalao c/ mayonesa en el pan",                                           precios: { "Sencilla": 140, "c/Queso": 160 } },
-      { id: "arrachera",       emoji: "✨", nombre: "Arrachera",                desc: "Carne arrachera, mayonesa, jitomate, cebolla, aguacate",                  precios: { "Sencilla": 120, "c/Queso": 140 } },
-      { id: "rost-beef",       emoji: "✨", nombre: "Rost Beef",                desc: "Rost beef, mayonesa, arugula, queso manchego, aioli de serrano",          precios: { "Sencilla": 120, "c/Queso": 140 } },
-      { id: "camarones",       emoji: "✨", nombre: "Camarones Rebozados",      desc: "Camarón, aguacate, arugula, aioli de serrano",                            precios: { "Sencilla": 140, "c/Queso": 160 } },
-      { id: "filete-pescado",  emoji: "✨", nombre: "Filete de Pescado al Horno", desc: "Filete, mayonesa, elote, epazote, mantequilla",                         precios: { "Único": 120 } },
-      { id: "jamon-serrano",   emoji: "✨", nombre: "Jamón Serrano",            desc: "Mayonesa, ajo confitado, tomate confitado, queso de cabra, toque de aceite de oliva, albahaca", precios: { "Único": 160 } },
+      { id: "bacalao",         emoji: "✨", imagen: "", nombre: "Bacalao",                  desc: "Bacalao c/ mayonesa en el pan",                                           precios: { "Sencilla": 140, "c/Queso": 160 } },
+      { id: "arrachera",       emoji: "✨", imagen: "", nombre: "Arrachera",                desc: "Carne arrachera, mayonesa, jitomate, cebolla, aguacate",                  precios: { "Sencilla": 120, "c/Queso": 140 } },
+      { id: "rost-beef",       emoji: "✨", imagen: "", nombre: "Rost Beef",                desc: "Rost beef, mayonesa, arugula, queso manchego, aioli de serrano",          precios: { "Sencilla": 120, "c/Queso": 140 } },
+      { id: "camarones",       emoji: "✨", imagen: "", nombre: "Camarones Rebozados",      desc: "Camarón, aguacate, arugula, aioli de serrano",                            precios: { "Sencilla": 140, "c/Queso": 160 } },
+      { id: "filete-pescado",  emoji: "✨", imagen: "", nombre: "Filete de Pescado al Horno", desc: "Filete, mayonesa, elote, epazote, mantequilla",                         precios: { "Único": 120 } },
+      { id: "jamon-serrano",   emoji: "✨", imagen: "", nombre: "Jamón Serrano",            desc: "Mayonesa, ajo confitado, tomate confitado, queso de cabra, toque de aceite de oliva, albahaca", precios: { "Único": 160 } },
     ],
   },
   comidas: {
     label: "Comidas", emoji: "🍽️",
     items: [
-      { id: "chilaquiles", emoji: "🍽️", nombre: "Chilaquiles", desc: "Arma tus chilaquiles: elige salsa y si los quieres con proteína", tipo: "chilaquiles", desdePrecio: 70 },
-      { id: "flautas",     emoji: "🌯", nombre: "5 Flautas",    desc: "Cinco flautas doradas, elige pollo o papa",       precios: { "Pollo": 85, "Papa": 85 } },
-      { id: "hotdog",      emoji: "🌭", nombre: "Hot Dog",      desc: "Elige tu estilo",                                  precios: { "Sencillo": 55, "Tocino": 65, "Embonazado": 75 } },
-      { id: "ensalada",    emoji: "🥗", nombre: "Ensalada",     desc: "Arma tu ensalada: sencilla o con proteína a elegir", tipo: "ensalada", desdePrecio: 60 },
-      { id: "dobladas",    emoji: "🌮", nombre: "5 Dobladas",   desc: "Cinco dobladas doradas, elige verdes o rojas",     precios: { "Verdes": 60, "Rojas": 60 } },
-      { id: "boneless",    emoji: "🍗", nombre: "Boneless 250g", desc: "Arma tu orden: elige salsa y si quieres agregar papas", tipo: "boneless", desdePrecio: 120 },
-      { id: "alitas",      emoji: "🍗", nombre: "Alitas 10Pz",   desc: "Arma tu orden: elige tu salsa",                     tipo: "alitas", desdePrecio: 150 },
+      { id: "chilaquiles", emoji: "🍽️", imagen: "", nombre: "Chilaquiles", desc: "Arma tus chilaquiles: elige salsa y si los quieres con proteína", tipo: "chilaquiles", desdePrecio: 70 },
+      { id: "flautas",     emoji: "🌯", imagen: "", nombre: "5 Flautas",    desc: "Cinco flautas doradas, elige pollo o papa",       precios: { "Pollo": 85, "Papa": 85 } },
+      { id: "hotdog",      emoji: "🌭", imagen: "", nombre: "Hot Dog",      desc: "Elige tu estilo",                                  precios: { "Sencillo": 55, "Tocino": 65, "Embonazado": 75 } },
+      { id: "ensalada",    emoji: "🥗", imagen: "", nombre: "Ensalada",     desc: "Arma tu ensalada: sencilla o con proteína a elegir", tipo: "ensalada", desdePrecio: 60 },
+      { id: "dobladas",    emoji: "🌮", imagen: "", nombre: "5 Dobladas",   desc: "Cinco dobladas doradas, elige verdes o rojas",     precios: { "Verdes": 60, "Rojas": 60 } },
+      { id: "boneless",    emoji: "🍗", imagen: "", nombre: "Boneless 250g", desc: "Arma tu orden: elige salsa y si quieres agregar papas", tipo: "boneless", desdePrecio: 120 },
+      { id: "alitas",      emoji: "🍗", imagen: "", nombre: "Alitas 10Pz",   desc: "Arma tu orden: elige tu salsa",                     tipo: "alitas", desdePrecio: 150 },
     ],
   },
   complementos: {
     label: "Complementos", emoji: "🍟",
     items: [
-      { id: "papas-francesa", emoji: "🍟", nombre: "Papas a la Francesa",  desc: "Porción de papas fritas",              precios: { "Orden": 65 } },
-      { id: "dedos-queso",    emoji: "🧀", nombre: "4 Dedos de Queso",     desc: "Dedos de queso empanizados",           precios: { "Orden": 85 } },
-      { id: "palomitas-pollo",emoji: "🍗", nombre: "Palomitas de Pollo",   desc: "Trocitos de pollo empanizado",         precios: { "Orden": 120 } },
-      { id: "salsa-chipotle", emoji: "🌶️", nombre: "Salsa de Chipotle",    desc: "Extra picante",                        precios: { "Orden": 15 } },
-      { id: "chiles-vinagre", emoji: "🌶️", nombre: "Chiles en Vinagre",    desc: "Chiles jalapeños en vinagre",          precios: { "Orden": 15 } },
-      { id: "agua-fruta",     emoji: "🥤", nombre: "Agua de Fruta Natural", desc: "Agua fresca del día, 1 litro",         precios: { "1lt": 45 } },
-      { id: "coca-cola",      emoji: "🥤", nombre: "Coca-Cola",            desc: "Refresco 355ml",                       precios: { "355ml": 35 } },
+      { id: "papas-francesa", emoji: "🍟", imagen: "", nombre: "Papas a la Francesa",  desc: "Porción de papas fritas",              precios: { "Orden": 65 } },
+      { id: "dedos-queso",    emoji: "🧀", imagen: "", nombre: "4 Dedos de Queso",     desc: "Dedos de queso empanizados",           precios: { "Orden": 85 } },
+      { id: "palomitas-pollo",emoji: "🍗", imagen: "", nombre: "Palomitas de Pollo",   desc: "Trocitos de pollo empanizado",         precios: { "Orden": 120 } },
+      { id: "salsa-chipotle", emoji: "🌶️", imagen: "", nombre: "Salsa de Chipotle",    desc: "Extra picante",                        precios: { "Orden": 15 } },
+      { id: "chiles-vinagre", emoji: "🌶️", imagen: "", nombre: "Chiles en Vinagre",    desc: "Chiles jalapeños en vinagre",          precios: { "Orden": 15 } },
+      { id: "agua-fruta",     emoji: "🥤", imagen: "", nombre: "Agua de Fruta Natural", desc: "Agua fresca del día, 1 litro",         precios: { "1lt": 45 } },
+      { id: "coca-cola",      emoji: "🥤", imagen: "", nombre: "Coca-Cola",            desc: "Refresco 355ml",                       precios: { "355ml": 35 } },
     ],
   },
 };
@@ -126,6 +130,15 @@ function Btn({ children, onClick, variant = "primary", disabled }) {
   const base = { border: "none", cursor: disabled ? "default" : "pointer", borderRadius: 14, fontFamily: "system-ui,sans-serif", fontWeight: 700, fontSize: 15, transition: "opacity 0.15s", opacity: disabled ? 0.4 : 1 };
   if (variant === "primary") return <button onClick={onClick} disabled={disabled} style={{ ...base, background: accent, color: "#fff", padding: "14px 0", width: "100%" }}>{children}</button>;
   if (variant === "ghost")   return <button onClick={onClick} disabled={disabled} style={{ ...base, background: "none", color: muted, padding: "14px 0" }}>{children}</button>;
+}
+
+// ── Imagen de producto con emoji de respaldo si no hay link de imagen ────────
+function ItemMedia({ imagen, emoji, size = 30 }) {
+  const [error, setError] = useState(false);
+  if (imagen && !error) {
+    return <img src={imagen} alt="" onError={() => setError(true)} style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "inherit" }} />;
+  }
+  return <span style={{ fontSize: size }}>{emoji}</span>;
 }
 
 function Pasos({ paso }) {
@@ -344,11 +357,11 @@ function ProductoCard({ item, onAdd, carritoItems }) {
 
   const handleAdd = () => {
     if (esArmable) { setShowModal(true); return; }
-    onAdd({ id: item.id, nombre: item.nombre, tamano: tam, precio: precioActual, emoji: item.emoji });
+    onAdd({ id: item.id, nombre: item.nombre, tamano: tam, precio: precioActual, emoji: item.emoji, imagen: item.imagen });
     setFlash(true); setTimeout(() => setFlash(false), 900);
   };
   const handleArmarConfirm = ({ tamano, precio }) => {
-    onAdd({ id: item.id, nombre: item.nombre, tamano, precio, emoji: item.emoji });
+    onAdd({ id: item.id, nombre: item.nombre, tamano, precio, emoji: item.emoji, imagen: item.imagen });
     setShowModal(false);
     setFlash(true); setTimeout(() => setFlash(false), 900);
   };
@@ -368,8 +381,8 @@ function ProductoCard({ item, onAdd, carritoItems }) {
         <AlitasModal item={item} onConfirm={handleArmarConfirm} onClose={() => setShowModal(false)} />
       )}
       <div style={{ background: card, border: `1.5px solid ${border}`, borderRadius: 18, padding: "16px", display: "flex", alignItems: "center", gap: 14 }}>
-        <div style={{ width: 60, height: 60, borderRadius: 14, background: pill, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <span style={{ fontSize: 30 }}>{item.emoji}</span>
+        <div style={{ width: 60, height: 60, borderRadius: 14, background: pill, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+          <ItemMedia imagen={item.imagen} emoji={item.emoji} size={30} />
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontFamily: "system-ui,sans-serif", fontWeight: 700, fontSize: 15, color: text, marginBottom: 2 }}>{item.nombre}</div>
@@ -457,7 +470,7 @@ function PasoEntrega({ carrito, onQuitar, onAdd, onNext, onBack, horarios }) {
             <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
               {ZONAS.map(z => (
                 <button key={z} onClick={() => setZona(z)} style={{ border: `1.5px solid ${zona === z ? accent : border}`, background: zona === z ? accent + "22" : card, borderRadius: 10, padding: "8px 14px", fontFamily: "system-ui,sans-serif", fontSize: 12, fontWeight: 600, color: zona === z ? accent : muted, cursor: "pointer" }}>
-                  {z} · ${ENVIO_POR_ZONA[z]}
+                  {z} · {envioTxt(ENVIO_POR_ZONA[z])}
                 </button>
               ))}
             </div>
@@ -472,7 +485,7 @@ function PasoEntrega({ carrito, onQuitar, onAdd, onNext, onBack, horarios }) {
           </div>
           {zona && direccion.trim() && (
             <div style={{ fontFamily: "system-ui,sans-serif", fontSize: 12, color: muted }}>
-              📍 Entrega en {zona} · Envío: <b style={{ color: accent }}>${ENVIO_POR_ZONA[zona]}</b>
+              📍 Entrega en {zona} · Envío: <b style={{ color: accent }}>{envioTxt(ENVIO_POR_ZONA[zona])}</b>
             </div>
           )}
         </div>
@@ -489,8 +502,8 @@ function PasoEntrega({ carrito, onQuitar, onAdd, onNext, onBack, horarios }) {
         <span style={s.label}>Tu pedido</span>
         {carrito.map(i => (
           <div key={carritoLineKey(i)} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-            <div style={{ width: 44, height: 44, borderRadius: 8, background: pill, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <span style={{ fontSize: 22 }}>{i.emoji}</span>
+            <div style={{ width: 44, height: 44, borderRadius: 8, background: pill, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+              <ItemMedia imagen={i.imagen} emoji={i.emoji} size={22} />
             </div>
             <div style={{ flex: 1 }}>
               <div style={{ fontFamily: "system-ui,sans-serif", fontSize: 14, fontWeight: 600, color: text }}>{i.nombre}</div>
@@ -506,7 +519,7 @@ function PasoEntrega({ carrito, onQuitar, onAdd, onNext, onBack, horarios }) {
         ))}
         <div style={{ borderTop: `1px solid ${border}`, marginTop: 8, paddingTop: 12 }}>
           <div style={{ display: "flex", justifyContent: "space-between", fontFamily: "system-ui,sans-serif", fontSize: 13, color: muted, marginBottom: 4 }}><span>Subtotal</span><span>${subtotal.toFixed(0)}</span></div>
-          <div style={{ display: "flex", justifyContent: "space-between", fontFamily: "system-ui,sans-serif", fontSize: 13, color: muted, marginBottom: 4 }}><span>Envío</span><span>{tipo === "recoger" ? "—" : envio == null ? "…" : `$${envio}`}</span></div>
+          <div style={{ display: "flex", justifyContent: "space-between", fontFamily: "system-ui,sans-serif", fontSize: 13, color: muted, marginBottom: 4 }}><span>Envío</span><span>{tipo === "recoger" ? "—" : envio == null ? "…" : envioTxt(envio)}</span></div>
           <div style={{ display: "flex", justifyContent: "space-between", fontFamily: "system-ui,sans-serif", fontSize: 17, fontWeight: 800, color: text, marginTop: 8 }}><span>Total</span><span style={{ color: accent }}>${total.toFixed(0)}</span></div>
         </div>
       </div>
@@ -523,7 +536,6 @@ function PasoDatos({ entrega, carrito, onBack, onConfirmar }) {
   const [nombre, setNombre]     = useState("");
   const [telefono, setTelefono] = useState("");
   const [email, setEmail]       = useState("");
-  const [numInt, setNumInt]     = useState("");
   const [pago, setPago]         = useState("efectivo");
   const [notas, setNotas]       = useState("");
   const [error, setError]       = useState(null);
@@ -543,7 +555,7 @@ function PasoDatos({ entrega, carrito, onBack, onConfirmar }) {
     const resumen = buildResumen(carrito);
     const tipoLabel = entrega.tipo === "domicilio" ? "🛵 A domicilio" : "🏪 Recoger en tienda";
     const pagoLabel = pago === "efectivo" ? "💵 Efectivo" : "📲 Transferencia";
-    const dirCompleta = entrega.tipo === "domicilio" ? `${direccion}${numInt ? `, Int. ${numInt}` : ""}, ${zona}${referencias ? ` — Ref: ${referencias}` : ""}` : "—";
+    const dirCompleta = entrega.tipo === "domicilio" ? `${direccion}, ${zona}${referencias ? ` — Ref: ${referencias}` : ""}` : "—";
 
     const tgMsg = [
       `🥪 <b>NUEVO PEDIDO — ${folio}</b>`, ``,
@@ -568,7 +580,7 @@ function PasoDatos({ entrega, carrito, onBack, onConfirmar }) {
     const folio = `#CT:${String(num).padStart(4, "0")}`;
     await enviarNotificacion({ folio });
     setEnviando(false);
-    onConfirmar({ folio, nombre, telefono, email, direccion, numInt, zona, pago, notas });
+    onConfirmar({ folio, nombre, telefono, email, direccion, zona, pago, notas });
   };
 
   return (
@@ -585,7 +597,6 @@ function PasoDatos({ entrega, carrito, onBack, onConfirmar }) {
             {referencias && <div style={{ fontFamily: "system-ui,sans-serif", fontSize: 12, color: muted, marginTop: 4 }}>Ref: {referencias}</div>}
           </div>
         )}
-        {entrega.tipo === "domicilio" && <div><span style={s.label}>Número interior <span style={{ color: muted, textTransform: "none", fontSize: 10 }}>(opcional)</span></span><input value={numInt} onChange={e => setNumInt(e.target.value)} placeholder='Ej: "102A"' style={s.input} /></div>}
         <div>
           <span style={s.label}>Forma de pago</span>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
@@ -613,7 +624,9 @@ function PasoDatos({ entrega, carrito, onBack, onConfirmar }) {
 function Confirmacion({ folio, nombre, entrega, carrito, onNuevoPedido }) {
   return (
     <div style={{ textAlign: "center" }}>
-      <div style={{ fontSize: 64, marginBottom: 16 }}>🥪</div>
+      <div style={{ width: 90, height: 90, margin: "0 auto 16px", borderRadius: 20, overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <ItemMedia imagen={LOGO_URL} emoji="🥪" size={64} />
+      </div>
       <h2 style={{ fontFamily: "system-ui,sans-serif", fontWeight: 800, fontSize: 24, color: text, margin: "0 0 8px" }}>¡Pedido recibido!</h2>
       <p style={{ fontFamily: "system-ui,sans-serif", fontSize: 15, color: muted, margin: "0 0 28px" }}>Ya preparamos tu pedido, {nombre.split(" ")[0]}.</p>
       <div style={{ background: card, border: `1.5px solid ${border}`, borderRadius: 20, padding: 24, marginBottom: 24, textAlign: "left" }}>
@@ -624,8 +637,8 @@ function Confirmacion({ folio, nombre, entrega, carrito, onNuevoPedido }) {
         <div style={{ borderTop: `1px dashed ${border}`, paddingTop: 16 }}>
           {carrito.map(i => (
             <div key={carritoLineKey(i)} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10, fontFamily: "system-ui,sans-serif" }}>
-              <div style={{ width: 32, height: 32, borderRadius: 6, background: pill, flexShrink: 0, marginRight: 8, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <span style={{ fontSize: 18 }}>{i.emoji}</span>
+              <div style={{ width: 32, height: 32, borderRadius: 6, background: pill, flexShrink: 0, marginRight: 8, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+                <ItemMedia imagen={i.imagen} emoji={i.emoji} size={18} />
               </div>
               <span style={{ flex: 1, fontSize: 14, color: text }}>{i.cantidad}× {i.nombre} <span style={{ color: muted, fontSize: 12 }}>({i.tamano}{i.extras ? ` · ${i.extras}` : ""})</span></span>
               <span style={{ fontSize: 14, fontWeight: 700, color: accent }}>${(i.precio * i.cantidad).toFixed(0)}</span>
@@ -657,8 +670,8 @@ function HeaderCarrito({ carrito, abierto }) {
     <div style={{ borderBottom: `1px solid ${border}`, padding: "16px 20px 0", position: "sticky", top: 0, background: bg, zIndex: 10 }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: tieneItems ? 12 : 16 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <div style={{ width: 42, height: 42, borderRadius: 10, background: accent, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-            <span style={{ fontSize: 22 }}>🥪</span>
+          <div style={{ width: 42, height: 42, borderRadius: 10, background: accent, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, overflow: "hidden" }}>
+            <ItemMedia imagen={LOGO_URL} emoji="🥪" size={22} />
           </div>
           <div>
             <div style={{ fontWeight: 800, fontSize: 18, lineHeight: 1.1 }}>Cayetana Tortas</div>
@@ -688,8 +701,8 @@ function HeaderCarrito({ carrito, abierto }) {
           <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
             {carrito.map(i => (
               <div key={carritoLineKey(i)} style={{ display: "flex", alignItems: "center", gap: 8, fontFamily: "system-ui,sans-serif" }}>
-                <div style={{ width: 24, height: 24, borderRadius: 6, background: pill, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <span style={{ fontSize: 14 }}>{i.emoji}</span>
+                <div style={{ width: 24, height: 24, borderRadius: 6, background: pill, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+                  <ItemMedia imagen={i.imagen} emoji={i.emoji} size={14} />
                 </div>
                 <span style={{ flex: 1, fontSize: 13, color: text, fontWeight: 500 }}>
                   {i.cantidad}× {i.nombre}
@@ -765,8 +778,8 @@ export default function App() {
       `}</style>
       <HeaderCarrito carrito={carrito} abierto={abierto} />
       <div style={{ background: cardHi, borderBottom: `1px solid ${border}`, padding: "10px 20px", display: "flex", alignItems: "center", gap: 8 }}>
-        <span style={{ fontSize: 14 }}>📍</span>
-        <span style={{ fontFamily: "system-ui,sans-serif", fontSize: 12, color: muted }}>Zonas: <b style={{ color: text }}>Zakia · Zibatá · El Refugio</b></span>
+        <span style={{ fontSize: 14 }}>🎉</span>
+        <span style={{ fontFamily: "system-ui,sans-serif", fontSize: 12, color: muted }}>Envío <b style={{ color: accent }}>gratis</b> en <b style={{ color: text }}>Zakia · Zibatá · El Refugio</b></span>
       </div>
       <div style={{ maxWidth: 520, margin: "0 auto", padding: "24px 16px 40px" }}>
         {paso < 4 && <Pasos paso={paso} />}
