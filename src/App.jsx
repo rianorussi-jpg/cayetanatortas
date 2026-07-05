@@ -41,16 +41,16 @@ const MENU = {
   consentidas: {
     label: "Tortas Consentidas", emoji: "🥪",
     items: [
-      { id: "pierna",      emoji: "🥪", imagen: "https://images.unsplash.com/photo-1500048993953-d23a436266cf?w=900&q=80&auto=format&fit=crop", nombre: "Pierna",         desc: "Pierna adobada al horno c/ mayonesa en el pan", precios: { "Sencilla": 60, "c/Queso": 80 } },
+      { id: "pierna",      emoji: "🥪", imagen: "https://i.ibb.co/Rp0gyTtC/IMG-5968.jpg", nombre: "Pierna",         desc: "Pierna adobada al horno c/ mayonesa en el pan", precios: { "Sencilla": 60, "c/Queso": 80 } },
       { id: "mole-pollo",  emoji: "🥪", imagen: "", nombre: "Mole con Pollo", desc: "Mole rojo con pechuga de pollo c/ mayonesa en el pan", precios: { "Sencilla": 60, "c/Queso": 80 } },
     ],
   },
   clasicas: {
     label: "Tortas Clásicas", emoji: "🥪",
     items: [
-      { id: "mila-cerdo", emoji: "🥪", imagen: "", nombre: "Milanesa de Cerdo",  desc: "Milanesa de cerdo, mayonesa, jitomate, cebolla, aguacate", precios: { "Sencilla": 70,  "c/Queso": 90  } },
-      { id: "mila-res",   emoji: "🥪", imagen: "", nombre: "Milanesa de Res",    desc: "Milanesa de res, mayonesa, jitomate, cebolla, aguacate",   precios: { "Sencilla": 120, "c/Queso": 140 } },
-      { id: "pechuga",    emoji: "🥪", imagen: "", nombre: "Pechuga Empanizada", desc: "Pechuga de pollo, mayonesa, jitomate, cebolla, aguacate",  precios: { "Sencilla": 70,  "c/Queso": 90  } },
+      { id: "mila-cerdo", emoji: "🥪", imagen: "https://i.ibb.co/b56tFbyt/IMG-5966.jpg", nombre: "Milanesa de Cerdo",  desc: "Milanesa de cerdo, mayonesa, jitomate, cebolla, aguacate", precios: { "Sencilla": 70,  "c/Queso": 90  } },
+      { id: "mila-res",   emoji: "🥪", imagen: "https://i.ibb.co/b56tFbyt/IMG-5966.jpg", nombre: "Milanesa de Res",    desc: "Milanesa de res, mayonesa, jitomate, cebolla, aguacate",   precios: { "Sencilla": 120, "c/Queso": 140 } },
+      { id: "pechuga",    emoji: "🥪", imagen: "https://i.ibb.co/b56tFbyt/IMG-5966.jpg", nombre: "Pechuga Empanizada", desc: "Pechuga de pollo, mayonesa, jitomate, cebolla, aguacate",  precios: { "Sencilla": 70,  "c/Queso": 90  } },
     ],
   },
   fancy: {
@@ -58,7 +58,7 @@ const MENU = {
     items: [
       { id: "bacalao",         emoji: "✨", imagen: "https://i.ibb.co/ZpCT7NK0/IMG-5969.jpg", nombre: "Bacalao",                  desc: "Bacalao c/ mayonesa en el pan",                                           precios: { "Sencilla": 140, "c/Queso": 160 } },
       { id: "arrachera",       emoji: "✨", imagen: "", nombre: "Arrachera",                desc: "Carne arrachera, mayonesa, jitomate, cebolla, aguacate",                  precios: { "Sencilla": 120, "c/Queso": 140 } },
-      { id: "rost-beef",       emoji: "✨", imagen: "", nombre: "Rost Beef",                desc: "Rost beef, mayonesa, arugula, queso manchego, aioli de serrano",          precios: { "Sencilla": 120, "c/Queso": 140 } },
+      { id: "rost-beef",       emoji: "✨", imagen: "https://i.ibb.co/d4SGS8d0/IMG-5967.jpg", nombre: "Rost Beef",                desc: "Rost beef, mayonesa, arugula, queso manchego, aioli de serrano",          precios: { "Sencilla": 120, "c/Queso": 140 } },
       { id: "camarones",       emoji: "✨", imagen: "", nombre: "Camarones Rebozados",      desc: "Camarón, aguacate, arugula, aioli de serrano",                            precios: { "Sencilla": 140, "c/Queso": 160 } },
       { id: "filete-pescado",  emoji: "✨", imagen: "", nombre: "Filete de Pescado al Horno", desc: "Filete, mayonesa, elote, epazote, mantequilla",                         precios: { "Único": 120 } },
       { id: "jamon-serrano",   emoji: "✨", imagen: "", nombre: "Jamón Serrano",            desc: "Mayonesa, ajo confitado, tomate confitado, queso de cabra, toque de aceite de oliva, albahaca", precios: { "Único": 160 } },
@@ -67,13 +67,13 @@ const MENU = {
   comidas: {
     label: "Comidas", emoji: "🍽️",
     items: [
-      { id: "chilaquiles", emoji: "🍽️", imagen: "", nombre: "Chilaquiles", desc: "Arma tus chilaquiles: elige salsa y si los quieres con proteína", tipo: "chilaquiles", desdePrecio: 70 },
-      { id: "flautas",     emoji: "🌯", imagen: "", nombre: "5 Flautas",    desc: "Cinco flautas doradas, elige pollo o papa",       precios: { "Pollo": 85, "Papa": 85 } },
-      { id: "hotdog",      emoji: "🌭", imagen: "", nombre: "Hot Dog",      desc: "Elige tu estilo",                                  precios: { "Sencillo": 55, "Tocino": 65, "Embonazado": 75 } },
-      { id: "ensalada",    emoji: "🥗", imagen: "", nombre: "Ensalada",     desc: "Arma tu ensalada: sencilla o con proteína a elegir", tipo: "ensalada", desdePrecio: 60 },
-      { id: "dobladas",    emoji: "🌮", imagen: "", nombre: "5 Dobladas",   desc: "Cinco dobladas doradas, elige verdes o rojas",     precios: { "Verdes": 60, "Rojas": 60 } },
-      { id: "boneless",    emoji: "🍗", imagen: "", nombre: "Boneless 250g", desc: "Arma tu orden: elige salsa y si quieres agregar papas", tipo: "boneless", desdePrecio: 120 },
-      { id: "alitas",      emoji: "🍗", imagen: "", nombre: "Alitas 10Pz",   desc: "Arma tu orden: elige tu salsa",                     tipo: "alitas", desdePrecio: 150 },
+      { id: "chilaquiles", emoji: "🍽️", imagen: "https://i.ibb.co/zHHYVV9P/94c8048f-2dab-4f1d-a00f-876935cdcda6.jpg", nombre: "Chilaquiles", desc: "Arma tus chilaquiles: elige salsa y si los quieres con proteína", tipo: "chilaquiles", desdePrecio: 70 },
+      { id: "flautas",     emoji: "🌯", imagen: "https://i.ibb.co/ccJv99pF/30d71fa4-4036-4a65-98fc-5a4b536bf727.jpg", nombre: "5 Flautas",    desc: "Cinco flautas doradas, elige pollo o papa",       precios: { "Pollo": 85, "Papa": 85 } },
+      { id: "hotdog",      emoji: "🌭", imagen: "https://i.ibb.co/5X2TWW3W/40d91672-f1c2-472a-a4f5-570d0f9d9312.jpg", nombre: "Hot Dog",      desc: "Elige tu estilo",                                  precios: { "Sencillo": 55, "Tocino": 65, "Embonazado": 75 } },
+      { id: "ensalada",    emoji: "🥗", imagen: "https://i.ibb.co/XrWGcs7K/8a71b8e3-85a7-4eb5-9d67-917ddbd6e8c6.jpg", nombre: "Ensalada",     desc: "Arma tu ensalada: sencilla o con proteína a elegir", tipo: "ensalada", desdePrecio: 60 },
+      { id: "dobladas",    emoji: "🌮", imagen: "https://i.ibb.co/zhxCLd62/71507f02-b671-4dcc-aa17-4ecbae331308.jpg", nombre: "5 Dobladas",   desc: "Cinco dobladas doradas, elige verdes o rojas",     precios: { "Verdes": 60, "Rojas": 60 } },
+      { id: "boneless",    emoji: "🍗", imagen: "https://i.ibb.co/k66czGtC/3a509169-fb1d-43a6-944d-243738c2a114.jpg", nombre: "Boneless 250g", desc: "Arma tu orden: elige salsa y si quieres agregar papas", tipo: "boneless", desdePrecio: 120 },
+      { id: "alitas",      emoji: "🍗", imagen: "https://i.ibb.co/0VcHX9XP/75395435-9384-4687-a452-ecdbe854b568.jpg", nombre: "Alitas 10Pz",   desc: "Arma tu orden: elige tu salsa",                     tipo: "alitas", desdePrecio: 170 },
     ],
   },
   complementos: {
