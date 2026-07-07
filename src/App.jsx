@@ -85,7 +85,7 @@ const MENU = {
       { id: "salsa-chipotle", emoji: "🌶️", imagen: "https://i.ibb.co/tw4PkWLJ/9edd01e9-9c68-4153-8e5e-9896a2718209.jpg", nombre: "Salsa de Chipotle",    desc: "Extra picante",                        precios: { "Orden": 15 } },
       { id: "chiles-vinagre", emoji: "🌶️", imagen: "https://i.ibb.co/XvZqHRx/899bc84a-6481-4b5b-877c-61ac85c0f75f.jpg", nombre: "Chiles en Vinagre",    desc: "Chiles jalapeños en vinagre",          precios: { "Orden": 15 } },
       { id: "agua-fruta",     emoji: "🥤", imagen: "https://i.ibb.co/qMWYtHVV/7fa6f5d5-120b-41b0-ae4a-3ef16f6f7d36.jpg", nombre: "Agua de Fruta Natural", desc: "Agua fresca del día, 1 litro",         precios: { "1lt": 45 } },
-      { id: "coca-cola",      emoji: "🥤", imagen: "https://garis.mayoreoenlinea.mx/cdn/shop/files/7501055332175.png?v=1767499626", nombre: "Coca-Cola",            desc: "Refresco 355ml",                       precios: { "355ml": 35 } },
+      { id: "coca-cola",      emoji: "🥤", imagen: "https://resources.coca-colaentuhogar.com/media/catalog/product/c/o/coccol-orig-nor-pet-600ml-4pz_6.png?quality=100&fit=bounds&height=550&width=550&format=webp", nombre: "Coca-Cola",            desc: "Refresco 600ml",                       precios: { "355ml": 35 } },
     ],
   },
 };
