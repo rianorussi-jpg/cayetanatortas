@@ -79,12 +79,12 @@ const MENU = {
   complementos: {
     label: "Complementos", emoji: "🍟",
     items: [
-      { id: "papas-francesa", emoji: "🍟", imagen: "https://i.ibb.co/F4T6CWSf/IMG-5970.jpg", nombre: "Papas a la Francesa",  desc: "Porción de papas fritas",              precios: { "Orden": 65 } },
+      { id: "papas-francesa", emoji: "🍟", imagen: "https://i.ibb.co/n87mt7f7/3a05253e-a9c0-4e76-a229-2faa685132b4.jpg", nombre: "Papas a la Francesa",  desc: "Porción de papas fritas",              precios: { "Orden": 65 } },
       { id: "dedos-queso",    emoji: "🧀", imagen: "https://i.ibb.co/F4T6CWSf/IMG-5970.jpg", nombre: "4 Dedos de Queso",     desc: "Dedos de queso empanizados",           precios: { "Orden": 85 } },
       { id: "palomitas-pollo",emoji: "🍗", imagen: "https://i.ibb.co/F4T6CWSf/IMG-5970.jpg", nombre: "Palomitas de Pollo",   desc: "Trocitos de pollo empanizado",         precios: { "Orden": 120 } },
-      { id: "salsa-chipotle", emoji: "🌶️", imagen: "https://i.ibb.co/F4T6CWSf/IMG-5970.jpg", nombre: "Salsa de Chipotle",    desc: "Extra picante",                        precios: { "Orden": 15 } },
-      { id: "chiles-vinagre", emoji: "🌶️", imagen: "https://i.ibb.co/F4T6CWSf/IMG-5970.jpg", nombre: "Chiles en Vinagre",    desc: "Chiles jalapeños en vinagre",          precios: { "Orden": 15 } },
-      { id: "agua-fruta",     emoji: "🥤", imagen: "https://i.ibb.co/F4T6CWSf/IMG-5970.jpg", nombre: "Agua de Fruta Natural", desc: "Agua fresca del día, 1 litro",         precios: { "1lt": 45 } },
+      { id: "salsa-chipotle", emoji: "🌶️", imagen: "https://i.ibb.co/tw4PkWLJ/9edd01e9-9c68-4153-8e5e-9896a2718209.jpg", nombre: "Salsa de Chipotle",    desc: "Extra picante",                        precios: { "Orden": 15 } },
+      { id: "chiles-vinagre", emoji: "🌶️", imagen: "https://i.ibb.co/XvZqHRx/899bc84a-6481-4b5b-877c-61ac85c0f75f.jpg", nombre: "Chiles en Vinagre",    desc: "Chiles jalapeños en vinagre",          precios: { "Orden": 15 } },
+      { id: "agua-fruta",     emoji: "🥤", imagen: "https://i.ibb.co/qMWYtHVV/7fa6f5d5-120b-41b0-ae4a-3ef16f6f7d36.jpg", nombre: "Agua de Fruta Natural", desc: "Agua fresca del día, 1 litro",         precios: { "1lt": 45 } },
       { id: "coca-cola",      emoji: "🥤", imagen: "https://garis.mayoreoenlinea.mx/cdn/shop/files/7501055332175.png?v=1767499626", nombre: "Coca-Cola",            desc: "Refresco 355ml",                       precios: { "355ml": 35 } },
     ],
   },
