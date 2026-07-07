@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import emailjs from "@emailjs/browser";
 
 // ── Stripe (cobro con tarjeta) ───────────────────────────────────────────────
 // La llave pública es segura de exponer en el frontend.
@@ -9,11 +10,32 @@ import { Elements, CardElement, useStripe, useElements } from "@stripe/react-str
 const STRIPE_PUBLISHABLE_KEY = "pk_live_51Tqdzc1VhNMLqRr7JISUw2HpXRDeg2Dp1lbZn8Jm8OHYQ5SOFtShmpIg9TqF5OgzfUxy2kWYM5UQlN3gcDgQN2r800tbn4jqwX";
 const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
 
+// ── EmailJS (confirmaciones por correo) ──────────────────────────────────────
+// Crea un servicio y dos templates en https://dashboard.emailjs.com y pega aquí sus IDs.
+const EMAILJS_SERVICE_ID          = "service_o5mzv5g";
+const EMAILJS_TEMPLATE_ID_CLIENTE = "template_ujyw474";
+const EMAILJS_TEMPLATE_ID_NEGOCIO = "template_1ujcub6";
+const EMAILJS_PUBLIC_KEY          = "0ItG19nxAuETD8IJg";
+const NEGOCIO_EMAIL               = "cayetanatortas@gmail.com"; // correo donde el negocio recibe los pedidos
+
+async function sendEmailCliente(params) {
+  if (!params.to_email) return; // el correo del cliente es opcional en el formulario
+  try {
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID_CLIENTE, params, { publicKey: EMAILJS_PUBLIC_KEY });
+  } catch (e) { console.error("EmailJS (cliente) error:", e); }
+}
+
+async function sendEmailNegocio(params) {
+  try {
+    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID_NEGOCIO, params, { publicKey: EMAILJS_PUBLIC_KEY });
+  } catch (e) { console.error("EmailJS (negocio) error:", e); }
+}
+
 // ── Telegram (notificaciones de pedido) ──────────────────────────────────────
 // Reemplaza estos dos valores con el bot y chat de Cayetana Tortas antes de publicar.
 // (Cuando lo subas a tu proyecto Vite puedes volver a usar import.meta.env.VITE_TG_TOKEN si prefieres.)
-const TG_TOKEN   = "TU_TELEGRAM_BOT_TOKEN";
-const TG_CHAT_ID = "TU_TELEGRAM_CHAT_ID";
+const TG_TOKEN   = "8998595493:AAEb6yzYOWRBiZzcP8Wsd3fAChRU__IZnaY";
+const TG_CHAT_ID = "7681123167";
 
 async function sendTelegram(text) {
   try {
@@ -607,6 +629,29 @@ function PasoDatos({ entrega, carrito, onBack, onConfirmar }) {
       notas ? `\n📝 Notas: ${notas}` : "",
     ].filter(l => l !== "").join("\n");
     await sendTelegram(tgMsg);
+
+    // Variables compartidas por ambos templates de EmailJS (deben coincidir con {{variable}} en el dashboard)
+    const emailParams = {
+      folio,
+      nombre_cliente: nombre,
+      telefono_cliente: telefono,
+      to_email: email || "",
+      negocio_email: NEGOCIO_EMAIL,
+      tipo_entrega: tipoLabel,
+      horario: entrega.hora,
+      direccion: dirCompleta,
+      resumen_pedido: resumen,
+      subtotal: `$${entrega.subtotal.toFixed(0)}`,
+      envio: entrega.envio === 0 ? "Gratis" : `$${entrega.envio.toFixed(0)}`,
+      total: `$${entrega.total.toFixed(0)}`,
+      forma_pago: pagoLabel,
+      notas: notas || "—",
+    };
+
+    await Promise.all([
+      sendEmailCliente(emailParams),
+      sendEmailNegocio(emailParams),
+    ]);
   };
 
   const handleConfirmar = async () => {
