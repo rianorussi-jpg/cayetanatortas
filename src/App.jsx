@@ -28,7 +28,7 @@ const muted   = "#707870";
 const pill    = "#eef1ec";
 
 // ── Logo del negocio (pon aquí el link de tu logo; si lo dejas vacío se usa el emoji) ──
-const LOGO_URL = "https://i.ibb.co/cc27mz8g/Disen-o-sin-ti-tulo-9.png"; // Ej: "https://tusitio.com/logo.png"
+const LOGO_URL = "https://i.ibb.co/W4SvMyCv/5e26413f-e31e-4c30-a665-ed9aa4c57d3a.jpg"; // Ej: "https://tusitio.com/logo.png"
 
 // ── Zonas de entrega — envío gratis en las 3 colonias ────────────────────────
 const ZONAS = ["Zakia", "Zibatá", "El Refugio"];
