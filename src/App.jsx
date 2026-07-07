@@ -1,4 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+
+// ── Stripe (cobro con tarjeta) ───────────────────────────────────────────────
+// La llave pública es segura de exponer en el frontend.
+// La llave SECRETA nunca va aquí: solo vive como variable de entorno (STRIPE_SECRET_KEY)
+// dentro de la función serverless /api/create-payment-intent.js en Vercel.
+const STRIPE_PUBLISHABLE_KEY = "pk_live_51Tqdzc1VhNMLqRr7JISUw2HpXRDeg2Dp1lbZn8Jm8OHYQ5SOFtShmpIg9TqF5OgzfUxy2kWYM5UQlN3gcDgQN2r800tbn4jqwX";
+const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
 
 // ── Telegram (notificaciones de pedido) ──────────────────────────────────────
 // Reemplaza estos dos valores con el bot y chat de Cayetana Tortas antes de publicar.
@@ -533,6 +542,9 @@ function PasoEntrega({ carrito, onQuitar, onAdd, onNext, onBack, horarios }) {
 }
 
 function PasoDatos({ entrega, carrito, onBack, onConfirmar }) {
+  const stripe   = useStripe();
+  const elements = useElements();
+
   const [nombre, setNombre]     = useState("");
   const [telefono, setTelefono] = useState("");
   const [email, setEmail]       = useState("");
@@ -547,14 +559,38 @@ function PasoDatos({ entrega, carrito, onBack, onConfirmar }) {
 
   const validar = () => {
     if (!nombre.trim() || !telefono.trim()) { setError("Falta tu nombre o teléfono."); return false; }
+    if (pago === "tarjeta" && (!stripe || !elements)) { setError("El pago con tarjeta no está listo, espera un momento."); return false; }
     setError(null);
     return true;
+  };
+
+  // Crea el PaymentIntent en el servidor y confirma el cobro con la tarjeta capturada por CardElement.
+  const cobrarConStripe = async () => {
+    const centavos = Math.round(entrega.total * 100);
+    const res = await fetch("/api/create-payment-intent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ amount: centavos, currency: "mxn" }),
+    });
+    if (!res.ok) throw new Error("No se pudo iniciar el cobro.");
+    const { clientSecret } = await res.json();
+
+    const result = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: elements.getElement(CardElement),
+        billing_details: { name: nombre, email: email || undefined, phone: telefono },
+      },
+    });
+
+    if (result.error) throw new Error(result.error.message || "Tu tarjeta fue rechazada.");
+    if (result.paymentIntent.status !== "succeeded") throw new Error("El pago no se completó.");
+    return result.paymentIntent.id;
   };
 
   const enviarNotificacion = async ({ folio }) => {
     const resumen = buildResumen(carrito);
     const tipoLabel = entrega.tipo === "domicilio" ? "🛵 A domicilio" : "🏪 Recoger en tienda";
-    const pagoLabel = pago === "efectivo" ? "💵 Efectivo" : "📲 Transferencia";
+    const pagoLabel = pago === "efectivo" ? "💵 Efectivo" : pago === "transferencia" ? "📲 Transferencia" : "💳 Tarjeta (Stripe)";
     const dirCompleta = entrega.tipo === "domicilio" ? `${direccion}, ${zona}${referencias ? ` — Ref: ${referencias}` : ""}` : "—";
 
     const tgMsg = [
@@ -576,11 +612,23 @@ function PasoDatos({ entrega, carrito, onBack, onConfirmar }) {
   const handleConfirmar = async () => {
     if (!validar()) return;
     setEnviando(true);
+
+    let paymentIntentId = null;
+    if (pago === "tarjeta") {
+      try {
+        paymentIntentId = await cobrarConStripe();
+      } catch (e) {
+        setError(e.message || "No se pudo procesar el pago con tarjeta.");
+        setEnviando(false);
+        return;
+      }
+    }
+
     const num = Math.floor(Math.random() * 9999) + 1;
     const folio = `#CT:${String(num).padStart(4, "0")}`;
     await enviarNotificacion({ folio });
     setEnviando(false);
-    onConfirmar({ folio, nombre, telefono, email, direccion, zona, pago, notas });
+    onConfirmar({ folio, nombre, telefono, email, direccion, zona, pago, notas, paymentIntentId });
   };
 
   return (
@@ -599,14 +647,26 @@ function PasoDatos({ entrega, carrito, onBack, onConfirmar }) {
         )}
         <div>
           <span style={s.label}>Forma de pago</span>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-            {[["efectivo", "💵", "Efectivo"], ["transferencia", "📲", "Transferencia"]].map(([v, emoji, lbl]) => (
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
+            {[["efectivo", "💵", "Efectivo"], ["transferencia", "📲", "Transferencia"], ["tarjeta", "💳", "Tarjeta"]].map(([v, emoji, lbl]) => (
               <div key={v} onClick={() => { if (!enviando) setPago(v); }} style={{ background: pago === v ? accent + "22" : card, border: `1.5px solid ${pago === v ? accent : border}`, borderRadius: 14, padding: "14px 8px", textAlign: "center", cursor: enviando ? "default" : "pointer" }}>
                 <div style={{ fontSize: 22, marginBottom: 4 }}>{emoji}</div>
                 <div style={{ fontFamily: "system-ui,sans-serif", fontSize: 11, fontWeight: 600, color: pago === v ? accent : muted }}>{lbl}</div>
               </div>
             ))}
           </div>
+          {pago === "tarjeta" && (
+            <div style={{ marginTop: 10, background: card, border: `1.5px solid ${border}`, borderRadius: 14, padding: "14px 16px" }}>
+              <CardElement
+                options={{
+                  style: {
+                    base: { fontFamily: "system-ui,sans-serif", fontSize: "15px", color: text, "::placeholder": { color: muted } },
+                    invalid: { color: "#c0392b" },
+                  },
+                }}
+              />
+            </div>
+          )}
         </div>
         <div><span style={s.label}>Notas (opcional)</span><textarea value={notas} onChange={e => setNotas(e.target.value)} placeholder="Sin cebolla, extra salsa…" rows={2} style={{ ...s.input, resize: "vertical" }} /></div>
         <div style={{ background: card, border: `1.5px solid ${border}`, borderRadius: 14, padding: "14px 16px" }}>
@@ -785,7 +845,11 @@ export default function App() {
         {paso < 4 && <Pasos paso={paso} />}
         {paso === 1 && <PasoMenu carrito={carrito} onAdd={agregar} onNext={() => setPaso(2)} />}
         {paso === 2 && <PasoEntrega carrito={carrito} onQuitar={quitar} onAdd={agregar} horarios={horariosDia} onNext={e => { setEntrega(e); setPaso(3); }} onBack={() => setPaso(1)} />}
-        {paso === 3 && <PasoDatos entrega={entrega} carrito={carrito} onBack={() => setPaso(2)} onConfirmar={handleConfirmar} />}
+        {paso === 3 && (
+          <Elements stripe={stripePromise}>
+            <PasoDatos entrega={entrega} carrito={carrito} onBack={() => setPaso(2)} onConfirmar={handleConfirmar} />
+          </Elements>
+        )}
         {paso === 4 && confirmacion && <Confirmacion folio={confirmacion.folio} nombre={confirmacion.datos.nombre} entrega={entrega} carrito={carrito} onNuevoPedido={reset} />}
       </div>
     </div>
