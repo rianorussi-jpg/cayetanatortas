@@ -41,8 +41,8 @@ const MENU = {
   consentidas: {
     label: "Tortas Consentidas", emoji: "🥪",
     items: [
-      { id: "pierna",      emoji: "🥪", imagen: "https://i.ibb.co/XxmR3BcC/PHOTO-2026-07-07-12-42-06.jpg", nombre: "Pierna",         desc: "Pierna adobada al horno c/ mayonesa en el pan", precios: { "Sencilla": 60, "c/Queso": 80 } },
-      { id: "mole-pollo",  emoji: "🥪", imagen: "https://i.ibb.co/F4T6CWSf/IMG-5970.jpg", nombre: "Mole con Pollo", desc: "Mole rojo con pechuga de pollo c/ mayonesa en el pan", precios: { "Sencilla": 60, "c/Queso": 80 } },
+      { id: "pierna",      emoji: "🥪", imagen: "https://i.ibb.co/rKNGrSTQ/IMG-5968.jpg", nombre: "Pierna",         desc: "Pierna adobada al horno c/ mayonesa en el pan", precios: { "Sencilla": 60, "c/Queso": 80 } },
+      { id: "mole-pollo",  emoji: "🥪", imagen: "https://i.ibb.co/XxmR3BcC/PHOTO-2026-07-07-12-42-06.jpg", nombre: "Mole con Pollo", desc: "Mole rojo con pechuga de pollo c/ mayonesa en el pan", precios: { "Sencilla": 60, "c/Queso": 80 } },
     ],
   },
   clasicas: {
