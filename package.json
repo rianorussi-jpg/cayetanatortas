@@ -15,6 +15,7 @@
     "@emailjs/browser": "^4.4.1",
     "@stripe/react-stripe-js": "^3.1.0",
     "@stripe/stripe-js": "^5.5.0",
+    "@supabase/supabase-js": "^2.45.4",
     "stripe": "^17.7.0"
   },
   "devDependencies": {
