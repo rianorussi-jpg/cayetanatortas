@@ -1,7 +1,22 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import emailjs from "@emailjs/browser";
+import { createClient } from "@supabase/supabase-js";
+
+// ── Panel de clientes (panel.creatusitio.mx) ────────────────────────────────
+const SUPABASE_URL      = import.meta.env.VITE_SUPABASE_URL;
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const BUSINESS_ID       = "0d734058-140f-4cdb-8fec-87c3f752cdb5"; // Cayetana Tortas
+const supabase = (SUPABASE_URL && SUPABASE_ANON_KEY) ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+// Genera un UUID v4 en el navegador (evita depender de .select() en el insert,
+// que choca con las políticas RLS de insert anónimo del panel).
+function uuidv4() {
+  return "10000000-1000-4000-8000-100000000000".replace(/[018]/g, c =>
+    (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16)
+  );
+}
 
 // ── Stripe (cobro con tarjeta) ───────────────────────────────────────────────
 // La llave pública es segura de exponer en el frontend.
@@ -144,6 +159,41 @@ const s = {
 
 function carritoLineKey(i) {
   return i.uid || `${i.id}|${i.tamano}|${i.precio}`;
+}
+
+// ── Productos apagados/prendidos desde el panel ────────────────────────────
+// Los ids de MENU (ej. "pierna", "boneless") se usan como `slug` en la tabla
+// `products`. Si un slug no existe todavía en la tabla se trata como activo
+// (para no ocultar nada mientras el negocio no lo haya dado de alta en el
+// panel). Solo se oculta si existe la fila y active=false.
+function useProductosPanel() {
+  const [productos, setProductos] = useState([]);
+  useEffect(() => {
+    if (!supabase) return;
+    let cancelado = false;
+    supabase
+      .from("products")
+      .select("id, slug, active")
+      .eq("business_id", BUSINESS_ID)
+      .then(({ data, error }) => {
+        if (error) { console.error("Supabase products:", error); return; }
+        if (!cancelado) setProductos(data || []);
+      });
+    return () => { cancelado = true; };
+  }, []);
+
+  const porSlug = useMemo(() => {
+    const map = {};
+    productos.forEach(p => { if (p.slug) map[p.slug] = p; });
+    return map;
+  }, [productos]);
+
+  const slugsInactivos = useMemo(
+    () => new Set(productos.filter(p => p.active === false).map(p => p.slug)),
+    [productos]
+  );
+
+  return { porSlug, slugsInactivos };
 }
 
 function buildResumen(carrito) {
@@ -377,7 +427,7 @@ function AlitasModal({ item, onConfirm, onClose }) {
   );
 }
 
-function ProductoCard({ item, onAdd, carritoItems }) {
+function ProductoCard({ item, onAdd, carritoItems, inactivo }) {
   const esArmable = item.tipo === "chilaquiles" || item.tipo === "ensalada" || item.tipo === "boneless" || item.tipo === "alitas";
   const tamanos = esArmable ? [] : Object.keys(item.precios);
   const [tam, setTam]     = useState(tamanos[0]);
@@ -387,6 +437,7 @@ function ProductoCard({ item, onAdd, carritoItems }) {
   const precioActual = esArmable ? null : item.precios[tam];
 
   const handleAdd = () => {
+    if (inactivo) return;
     if (esArmable) { setShowModal(true); return; }
     onAdd({ id: item.id, nombre: item.nombre, tamano: tam, precio: precioActual, emoji: item.emoji, imagen: item.imagen });
     setFlash(true); setTimeout(() => setFlash(false), 900);
@@ -411,12 +462,15 @@ function ProductoCard({ item, onAdd, carritoItems }) {
       {showModal && item.tipo === "alitas" && (
         <AlitasModal item={item} onConfirm={handleArmarConfirm} onClose={() => setShowModal(false)} />
       )}
-      <div style={{ background: card, border: `1.5px solid ${border}`, borderRadius: 18, padding: "16px", display: "flex", alignItems: "center", gap: 14 }}>
-        <div style={{ width: 60, height: 60, borderRadius: 14, background: pill, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+      <div style={{ background: card, border: `1.5px solid ${border}`, borderRadius: 18, padding: "16px", display: "flex", alignItems: "center", gap: 14, opacity: inactivo ? 0.5 : 1 }}>
+        <div style={{ width: 60, height: 60, borderRadius: 14, background: pill, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", filter: inactivo ? "grayscale(1)" : "none" }}>
           <ItemMedia imagen={item.imagen} emoji={item.emoji} size={30} />
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontFamily: "system-ui,sans-serif", fontWeight: 700, fontSize: 15, color: text, marginBottom: 2 }}>{item.nombre}</div>
+          <div style={{ fontFamily: "system-ui,sans-serif", fontWeight: 700, fontSize: 15, color: text, marginBottom: 2, display: "flex", alignItems: "center", gap: 8 }}>
+            {item.nombre}
+            {inactivo && <span style={{ fontSize: 10, fontWeight: 700, color: "#a33", background: "#f5d9d9", borderRadius: 6, padding: "2px 7px", textTransform: "uppercase", letterSpacing: "0.04em" }}>Agotado</span>}
+          </div>
           <p style={{ fontFamily: "system-ui,sans-serif", fontSize: 12, color: muted, margin: "0 0 8px", lineHeight: 1.4 }}>{item.desc}</p>
           {!esArmable && tamanos.length > 1 && (
             <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
@@ -426,8 +480,8 @@ function ProductoCard({ item, onAdd, carritoItems }) {
         </div>
         <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8, flexShrink: 0 }}>
           <span style={{ fontFamily: "system-ui,sans-serif", fontWeight: 800, fontSize: 17, color: accent }}>{esArmable ? `Desde $${item.desdePrecio}` : `$${precioActual}`}</span>
-          <button onClick={handleAdd} style={{ border: "none", cursor: "pointer", borderRadius: 10, padding: "7px 14px", background: flash ? accentS : pill, color: flash ? "#fff" : text, fontFamily: "system-ui,sans-serif", fontWeight: 700, fontSize: 13, transition: "all 0.2s", whiteSpace: "nowrap" }}>
-            {flash ? "✓" : enCarrito > 0 ? `+1 (${enCarrito})` : esArmable ? `${item.emoji} Armar` : "+Agregar"}
+          <button onClick={handleAdd} disabled={inactivo} style={{ border: "none", cursor: inactivo ? "default" : "pointer", borderRadius: 10, padding: "7px 14px", background: inactivo ? "#eee" : flash ? accentS : pill, color: inactivo ? muted : flash ? "#fff" : text, fontFamily: "system-ui,sans-serif", fontWeight: 700, fontSize: 13, transition: "all 0.2s", whiteSpace: "nowrap" }}>
+            {inactivo ? "Agotado" : flash ? "✓" : enCarrito > 0 ? `+1 (${enCarrito})` : esArmable ? `${item.emoji} Armar` : "+Agregar"}
           </button>
         </div>
       </div>
@@ -435,7 +489,7 @@ function ProductoCard({ item, onAdd, carritoItems }) {
   );
 }
 
-function PasoMenu({ carrito, onAdd, onNext }) {
+function PasoMenu({ carrito, onAdd, onNext, slugsInactivos }) {
   const total = carrito.reduce((s, i) => s + i.precio * i.cantidad, 0);
   const count = carrito.reduce((s, i) => s + i.cantidad, 0);
   return (
@@ -445,7 +499,7 @@ function PasoMenu({ carrito, onAdd, onNext }) {
         <div key={key} style={{ marginBottom: 28 }}>
           <div style={{ fontFamily: "system-ui,sans-serif", fontWeight: 600, fontSize: 12, textTransform: "uppercase", letterSpacing: "0.12em", color: muted, marginBottom: 12, textAlign: "center" }}>{cat.emoji} {cat.label}</div>
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {cat.items.map(item => <ProductoCard key={item.id} item={item} onAdd={onAdd} carritoItems={carrito} />)}
+            {cat.items.map(item => <ProductoCard key={item.id} item={item} onAdd={onAdd} carritoItems={carrito} inactivo={slugsInactivos.has(item.id)} />)}
           </div>
         </div>
       ))}
@@ -563,7 +617,7 @@ function PasoEntrega({ carrito, onQuitar, onAdd, onNext, onBack, horarios }) {
   );
 }
 
-function PasoDatos({ entrega, carrito, onBack, onConfirmar }) {
+function PasoDatos({ entrega, carrito, onBack, onConfirmar, productosPorSlug }) {
   const stripe   = useStripe();
   const elements = useElements();
 
@@ -609,6 +663,40 @@ function PasoDatos({ entrega, carrito, onBack, onConfirmar }) {
     return result.paymentIntent.id;
   };
 
+  // Inserta el pedido en Supabase para que aparezca en tiempo real en el panel
+  // (panel.creatusitio.mx). No bloquea ni tumba el flujo si falla: Telegram/
+  // EmailJS ya garantizan que el pedido le llega al negocio de todos modos.
+  const insertarPedidoPanel = async ({ folio, dirCompleta }) => {
+    if (!supabase) return;
+    try {
+      const orderId = uuidv4();
+      const { error: errOrder } = await supabase.from("orders").insert({
+        id: orderId,
+        business_id: BUSINESS_ID,
+        customer_name: nombre,
+        phone: telefono,
+        total: entrega.total,
+        status: "pendiente",
+        delivery_type: entrega.tipo,          // "domicilio" | "recoger"
+        address: entrega.tipo === "domicilio" ? dirCompleta : null,
+        delivery_time: entrega.hora,
+        notes: [notas, `Folio: ${folio}`].filter(Boolean).join(" · "),
+      });
+      if (errOrder) { console.error("Supabase orders insert:", errOrder); return; }
+
+      const items = carrito.map(i => ({
+        id: uuidv4(),
+        order_id: orderId,
+        product_id: productosPorSlug[i.id]?.id || null,
+        quantity: i.cantidad,
+        price: i.precio,
+        product_name: `${i.nombre} (${i.tamano}${i.extras ? ` · ${i.extras}` : ""})`,
+      }));
+      const { error: errItems } = await supabase.from("order_items").insert(items);
+      if (errItems) console.error("Supabase order_items insert:", errItems);
+    } catch (e) { console.error("Supabase pedido:", e); }
+  };
+
   const enviarNotificacion = async ({ folio }) => {
     const resumen = buildResumen(carrito);
     const tipoLabel = entrega.tipo === "domicilio" ? "🛵 A domicilio" : "🏪 Recoger en tienda";
@@ -628,7 +716,10 @@ function PasoDatos({ entrega, carrito, onBack, onConfirmar }) {
       `✅ <b>TOTAL: $${entrega.total.toFixed(0)}</b>`,
       notas ? `\n📝 Notas: ${notas}` : "",
     ].filter(l => l !== "").join("\n");
-    await sendTelegram(tgMsg);
+    await Promise.all([
+      sendTelegram(tgMsg),
+      insertarPedidoPanel({ folio, dirCompleta }),
+    ]);
 
     // Variables compartidas por ambos templates de EmailJS (deben coincidir con {{variable}} en el dashboard)
     const emailParams = {
@@ -842,6 +933,7 @@ export default function App() {
   const [abierto, setAbierto]           = useState(null);
   const [confirmacion, setConfirmacion] = useState(null);
   const horariosDia = getHorarios();
+  const { porSlug, slugsInactivos }     = useProductosPanel();
 
   useEffect(() => {
     fetch("https://timeapi.io/api/time/current/zone?timeZone=America%2FMexico_City")
@@ -888,11 +980,11 @@ export default function App() {
       </div>
       <div style={{ maxWidth: 520, margin: "0 auto", padding: "24px 16px 40px" }}>
         {paso < 4 && <Pasos paso={paso} />}
-        {paso === 1 && <PasoMenu carrito={carrito} onAdd={agregar} onNext={() => setPaso(2)} />}
+        {paso === 1 && <PasoMenu carrito={carrito} onAdd={agregar} onNext={() => setPaso(2)} slugsInactivos={slugsInactivos} />}
         {paso === 2 && <PasoEntrega carrito={carrito} onQuitar={quitar} onAdd={agregar} horarios={horariosDia} onNext={e => { setEntrega(e); setPaso(3); }} onBack={() => setPaso(1)} />}
         {paso === 3 && (
           <Elements stripe={stripePromise}>
-            <PasoDatos entrega={entrega} carrito={carrito} onBack={() => setPaso(2)} onConfirmar={handleConfirmar} />
+            <PasoDatos entrega={entrega} carrito={carrito} onBack={() => setPaso(2)} onConfirmar={handleConfirmar} productosPorSlug={porSlug} />
           </Elements>
         )}
         {paso === 4 && confirmacion && <Confirmacion folio={confirmacion.folio} nombre={confirmacion.datos.nombre} entrega={entrega} carrito={carrito} onNuevoPedido={reset} />}
